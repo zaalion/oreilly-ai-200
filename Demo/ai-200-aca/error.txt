@@ -1,0 +1,64 @@
+ Running ..AKS is experiencing heavy usage in region eastus. We are working on adding new capacity. In the meantime, please consider creating new AKS clusters in a different region. For a list of all the Azure regions, visit https://aka.ms/aks/regions. For more details on this error, visit https://aka.ms/akscapacityheavyusage.
+Status: 400 (Bad Request)
+ErrorCode: AKSCapacityHeavyUsage
+
+Content:
+{
+  "code": "AKSCapacityHeavyUsage",
+  "details": null,
+  "message": "AKS is experiencing heavy usage in region eastus. We are working on adding new capacity. In the meantime, please consider creating new AKS clusters in a different region. For a list of all the Azure regions, visit https://aka.ms/aks/regions. For more details on this error, visit https://aka.ms/akscapacityheavyusage.",
+  "subcode": ""
+ }
+
+Headers:
+Cache-Control: no-cache
+Pragma: no-cache
+x-ms-operation-identifier: REDACTED
+x-ms-correlation-request-id: REDACTED
+x-ms-request-id: f288950e-d1b3-4dce-96bc-dd4c40a033cf
+Strict-Transport-Security: REDACTED
+x-ms-throttling-version: REDACTED
+x-ms-ratelimit-remaining-subscription-writes: REDACTED
+x-ms-routing-request-id: REDACTED
+X-Content-Type-Options: REDACTED
+X-Cache: REDACTED
+X-MSEdge-Ref: REDACTED
+Date: Tue, 29 Sep 2026 19:22:50 GMT
+Content-Length: 408
+Content-Type: application/json
+Expires: -1
+
+
+
+------
+
+
+.Creating a new cluster is unavailable at this time in region centralus. To create a new cluster, we recommend using an alternate region. For a list of all the Azure regions, visit https://aka.ms/aks/regions. For more details on this error, visit https://aka.ms/akscapacityheavyusage.
+Status: 400 (Bad Request)
+ErrorCode: AKSCapacityHeavyUsage
+
+Content:
+{
+  "code": "AKSCapacityHeavyUsage",
+  "details": null,
+  "message": "Creating a new cluster is unavailable at this time in region centralus. To create a new cluster, we recommend using an alternate region.For a list of all the Azure regions, visit https://aka.ms/aks/regions. For more details on this error, visit https://aka.ms/akscapacityheavyusage.",
+  "subcode": ""
+ }
+
+Headers:
+Cache-Control: no-cache
+Pragma: no-cache
+x-ms-operation-identifier: REDACTED
+x-ms-correlation-request-id: REDACTED
+x-ms-request-id: 9ddf10fd-24c6-4146-99ba-df63f7a175f7
+Strict-Transport-Security: REDACTED
+x-ms-throttling-version: REDACTED
+x-ms-ratelimit-remaining-subscription-writes: REDACTED
+x-ms-routing-request-id: REDACTED
+X-Content-Type-Options: REDACTED
+X-Cache: REDACTED
+X-MSEdge-Ref: REDACTED
+Date: Tue, 29 Sep 2026 19:30:00 GMT
+Content-Length: 374
+Content-Type: application/json
+Expires: -1
