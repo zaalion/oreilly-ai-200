@@ -1,0 +1,35 @@
+# .NET build output
+**/bin/
+**/obj/
+**/artifacts/
+**/TestResults/
+**/BenchmarkDotNet.Artifacts/
+**/packages/
+
+# Visual Studio and .NET user-specific files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.rsuser
+
+# IDE and editor temporary files
+.idea/
+*.iml
+.vscode/.history/
+*.code-workspace
+
+# Test and coverage output
+coverage/
+coverage.*
+*.coverage
+*.coveragexml
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Office temporary/lock files
+~$*

@@ -1,0 +1,5 @@
+{
+    "appService.preDeployTask": "publish-release",
+    "appService.deploySubpath": "bin\\Release\\net8.0\\publish",
+    "appService.defaultWebAppToDeploy": "/subscriptions/19969c81-e8ff-4585-8c2f-3f196b588227/resourceGroups/AZ204-RG/providers/Microsoft.Web/sites/ai200-webapp"
+}
