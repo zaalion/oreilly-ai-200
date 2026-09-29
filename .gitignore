@@ -33,3 +33,14 @@ desktop.ini
 
 # Office temporary/lock files
 ~$*
+
+# PowerPoint presentations and show files
+*.ppt
+*.pptx
+*.pptm
+*.pps
+*.ppsx
+*.ppsm
+*.pot
+*.potx
+*.potm
