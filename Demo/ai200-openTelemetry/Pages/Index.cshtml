@@ -1,0 +1,51 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "OpenTelemetry Demo";
+}
+
+<section class="card">
+    <p class="eyebrow">OPENTELEMETRY</p>
+    <h1>Observe a checkout request</h1>
+    <p class="intro">
+        Run one operation to produce traces, metrics, and logs from the same application.
+    </p>
+
+    <form method="post">
+        <button type="submit">Run telemetry operation</button>
+    </form>
+
+    @if (Model.Result is not null)
+    {
+        <section class="result" aria-live="polite">
+            <p class="result-title">Telemetry created successfully</p>
+            <dl>
+                <dt>Order ID</dt>
+                <dd>@Model.Result.OrderId</dd>
+                <dt>Trace ID</dt>
+                <dd><code>@Model.Result.TraceId</code></dd>
+            </dl>
+            <p>Use the trace ID and order ID to find and correlate the records in the console or Application Insights.</p>
+        </section>
+    }
+
+    <section class="span-list">
+        <h2>Spans produced by this operation</h2>
+        <ul>
+            <li>Incoming Razor Pages POST request</li>
+            <li><code>ProcessCheckout</code></li>
+            <li><code>ValidateOrder</code></li>
+            <li><code>CheckInventory</code></li>
+            <li>Outgoing <code>HttpClient</code> request</li>
+            <li>Incoming <code>/api/inventory/ai-course</code> request</li>
+        </ul>
+    </section>
+
+    <section class="span-list">
+        <h2>Other signals produced by this operation</h2>
+        <ul>
+            <li><code>demo.checkout.completed</code> metric</li>
+            <li>Structured <code>Checkout completed</code> log correlated with the trace</li>
+        </ul>
+    </section>
+</section>
