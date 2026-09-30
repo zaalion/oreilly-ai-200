@@ -1,0 +1,124 @@
+:root {
+    color-scheme: light;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #172033;
+    background: #eef3fb;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    background: radial-gradient(circle at top left, #dce7ff, #f7f9fd 55%, #e7eef9);
+}
+
+main {
+    width: min(720px, 100%);
+}
+
+.card {
+    padding: clamp(2rem, 6vw, 4rem);
+    border: 1px solid #d8e0ee;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 24px 70px rgba(31, 52, 92, 0.14);
+}
+
+.eyebrow {
+    margin: 0 0 0.75rem;
+    color: #4f46e5;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 7vw, 4rem);
+    line-height: 1;
+}
+
+.intro {
+    margin: 1.25rem 0 2rem;
+    color: #56617a;
+    font-size: 1.08rem;
+}
+
+.secret-form {
+    display: grid;
+    gap: 0.7rem;
+}
+
+label {
+    font-weight: 750;
+}
+
+input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border: 1px solid #b9c5d8;
+    border-radius: 10px;
+    font: inherit;
+}
+
+input:focus {
+    border-color: #4f46e5;
+    outline: 3px solid rgba(79, 70, 229, 0.16);
+}
+
+button {
+    width: fit-content;
+    margin-top: 0.4rem;
+    padding: 0.8rem 1.4rem;
+    border: 0;
+    border-radius: 10px;
+    color: #fff;
+    background: #4f46e5;
+    font: inherit;
+    font-weight: 750;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #3f37c9;
+}
+
+button.secondary {
+    color: #3f37c9;
+    background: #e9e8ff;
+}
+
+.fetch-form {
+    margin-top: 1rem;
+}
+
+.status,
+.result {
+    margin: 1.25rem 0;
+    padding: 1rem;
+    border-radius: 10px;
+    background: #eef2ff;
+}
+
+.result h2 {
+    margin: 0 0 0.6rem;
+    font-size: 1rem;
+}
+
+.result output {
+    overflow-wrap: anywhere;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.validation {
+    color: #b42318;
+}
+
+code {
+    color: #3730a3;
+}

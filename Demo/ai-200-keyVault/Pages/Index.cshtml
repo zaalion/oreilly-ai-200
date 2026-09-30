@@ -1,0 +1,37 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Key Vault Secret Demo";
+}
+
+<section class="card">
+    <p class="eyebrow">AZURE KEY VAULT</p>
+    <h1>Save and fetch a secret</h1>
+    <p class="intro">
+        The value is stored in Azure Key Vault as <code>@Model.SecretName</code>.
+    </p>
+
+    @if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+    {
+        <div class="status" role="status">@Model.StatusMessage</div>
+    }
+
+    <form method="post" asp-page-handler="Save" class="secret-form">
+        <label asp-for="SecretValue">Secret value</label>
+        <input asp-for="SecretValue" autocomplete="off" placeholder="Enter a secret" />
+        <span asp-validation-for="SecretValue" class="validation"></span>
+        <button type="submit">Save secret</button>
+    </form>
+
+    <form method="post" asp-page-handler="Fetch" class="fetch-form">
+        <button type="submit" class="secondary">Fetch secret</button>
+    </form>
+
+    @if (Model.FetchedSecret is not null)
+    {
+        <section class="result" aria-live="polite">
+            <h2>Fetched secret</h2>
+            <output>@Model.FetchedSecret</output>
+        </section>
+    }
+</section>
