@@ -1,0 +1,25 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Azure App Configuration Demo";
+}
+
+<section class="card">
+    <p class="eyebrow">AZURE APP CONFIGURATION</p>
+    <h1>Centralized application settings</h1>
+    <p class="intro">
+        Both values use configuration keys, but only the second value is stored as a secret in Key Vault.
+    </p>
+
+    <section class="value-panel direct">
+        <p class="source-label">Loaded directly from Azure App Configuration</p>
+        <h2>Demo:DirectMessage</h2>
+        <output>@Model.DirectMessage</output>
+    </section>
+
+    <section class="value-panel secret">
+        <p class="source-label">Loaded from Key Vault through an Azure App Configuration reference</p>
+        <h2>Demo:KeyVaultMessage</h2>
+        <output>@Model.KeyVaultMessage</output>
+    </section>
+</section>

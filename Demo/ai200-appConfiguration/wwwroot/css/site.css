@@ -1,0 +1,87 @@
+:root {
+    color-scheme: light;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #172033;
+    background: #edf6f4;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    background: radial-gradient(circle at top left, #d7f5ed, #f7faf9 55%, #e5efed);
+}
+
+main {
+    width: min(820px, 100%);
+}
+
+.card {
+    padding: clamp(2rem, 6vw, 4rem);
+    border: 1px solid #d3e4e0;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 24px 70px rgba(29, 73, 64, 0.14);
+}
+
+.eyebrow {
+    margin: 0 0 0.75rem;
+    color: #087f6b;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 7vw, 4rem);
+    line-height: 1;
+}
+
+.intro {
+    margin: 1.25rem 0 2rem;
+    color: #56617a;
+    font-size: 1.08rem;
+}
+
+.value-panel {
+    margin-top: 1rem;
+    padding: 1.4rem;
+    border-radius: 14px;
+}
+
+.value-panel.direct {
+    background: #e8f7f3;
+    border-left: 5px solid #0f9f85;
+}
+
+.value-panel.secret {
+    background: #f2edff;
+    border-left: 5px solid #7053c7;
+}
+
+.source-label {
+    margin: 0 0 0.45rem;
+    color: #56617a;
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+}
+
+output {
+    display: block;
+    overflow-wrap: anywhere;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
