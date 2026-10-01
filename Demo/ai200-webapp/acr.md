@@ -5,8 +5,8 @@ This project targets .NET 8. The steps below create a Linux container image and 
 ## Prerequisites
 
 1. Install Azure CLI.
-2. Have an Azure account with access to the subscription containing `oreillyacrai200`.
-3. Confirm the `oreillyacrai200` registry exists and that your account has permission to build and push images. This remote ACR build does not require Docker Desktop, a local Docker daemon, or the .NET SDK on your machine.
+2. Have an Azure account with permission to create resources and build images in Azure Container Registry.
+3. This remote ACR build does not require Docker Desktop, a local Docker daemon, or the .NET SDK on your machine.
 
 ## 1. Add the Dockerfile
 
@@ -42,15 +42,55 @@ az account set --subscription "<subscription-id-or-name>"
 az account show --output table
 ```
 
-Replace `<subscription-id-or-name>` with the subscription that contains `oreillyacrai200`. `az login` authenticates the CLI, and `az account set` ensures subsequent registry commands target the right subscription.
+Replace `<subscription-id-or-name>` with the subscription where the registry will be created. `az login` authenticates the CLI, and `az account set` ensures subsequent registry commands target the right subscription.
 
-## 3. Build and push with Azure CLI
-
-From this project directory (`az200-webapp`), run:
+Define the resource values used by the remaining commands:
 
 ```powershell
-az acr show --name oreillyacrai200 --query "loginServer" --output tsv
-az acr build --registry oreillyacrai200 --image ai200-webapp:latest .
+$resourceGroup = "AI-200"
+$location = "eastus"
+$acrName = "oreillyacrai200"
+```
+
+## 3. Create Azure Container Registry
+
+Create the resource group if it does not already exist:
+
+```powershell
+az group create `
+  --name $resourceGroup `
+  --location $location
+```
+
+Create a Basic-tier Azure Container Registry:
+
+```powershell
+az acr create `
+  --name $acrName `
+  --resource-group $resourceGroup `
+  --location $location `
+  --sku Basic
+```
+
+Azure Container Registry names must be globally unique and contain only letters and numbers. If `oreillyacrai200` already exists in `AI-200`, skip the `az acr create` command and continue. If the name belongs to another Azure customer, choose a different globally unique registry name and use it throughout the remaining commands.
+
+Confirm the registry and its login server:
+
+```powershell
+az acr show `
+  --name $acrName `
+  --resource-group $resourceGroup `
+  --query "{name:name,loginServer:loginServer,sku:sku.name}" `
+  --output table
+```
+
+## 4. Build and push with Azure CLI
+
+From this project directory (`ai200-webapp`), run:
+
+```powershell
+az acr show --name $acrName --query "loginServer" --output tsv
+az acr build --registry $acrName --image ai200-webapp:latest .
 ```
 
 The first command confirms the registry's login server. The second sends the current directory as the build context, builds the image using the `Dockerfile`, and pushes it to `oreillyacrai200.azurecr.io/ai200-webapp:latest`. The build runs in Azure Container Registry, so no local Docker engine or Docker Desktop is needed. The signed-in Azure identity must have the required ACR build/push permissions.
@@ -60,8 +100,8 @@ To publish a versioned tag instead of (or in addition to) `latest`, replace `lat
 ## Verify the image in ACR
 
 ```powershell
-az acr repository show --name oreillyacrai200 --repository ai200-webapp --output table
-az acr repository show-tags --name oreillyacrai200 --repository ai200-webapp --output table
+az acr repository show --name $acrName --repository ai200-webapp --output table
+az acr repository show-tags --name $acrName --repository ai200-webapp --output table
 ```
 
 These commands confirm the repository exists and list its published tags.
