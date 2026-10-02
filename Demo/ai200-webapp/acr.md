@@ -50,6 +50,9 @@ Define the resource values used by the remaining commands:
 $resourceGroup = "AI-200"
 $location = "eastus"
 $acrName = "oreillyacrai200"
+$suffix = Get-Random -Minimum 100000 -Maximum 999999
+$planName = "oreilly-ai200-container-s1-plan"
+$webAppName = "oreilly-ai200-webapp-$suffix"
 ```
 
 ## 3. Create Azure Container Registry
@@ -97,7 +100,7 @@ The first command confirms the registry's login server. The second sends the cur
 
 To publish a versioned tag instead of (or in addition to) `latest`, replace `latest` with a version such as `1.0.0` in the `--image` value.
 
-## Verify the image in ACR
+## 5. Verify the image in ACR
 
 ```powershell
 az acr repository show --name $acrName --repository ai200-webapp --output table
@@ -105,6 +108,183 @@ az acr repository show-tags --name $acrName --repository ai200-webapp --output t
 ```
 
 These commands confirm the repository exists and list its published tags.
+
+## 6. Create an App Service plan and web app
+
+Create a Linux S1 App Service plan:
+
+```powershell
+az appservice plan create `
+  --name $planName `
+  --resource-group $resourceGroup `
+  --location $location `
+  --sku S1 `
+  --is-linux
+```
+
+Create the web app initially with the .NET 8 Linux runtime. A later step changes it to use the private container image:
+
+```powershell
+az webapp create `
+  --name $webAppName `
+  --resource-group $resourceGroup `
+  --plan $planName `
+  --runtime "DOTNETCORE:8.0"
+```
+
+App Service app names must be globally unique. The random suffix makes `$webAppName` unique and becomes part of the website URL.
+
+## 7. Give the web app permission to pull from ACR
+
+Enable the web app's system-assigned managed identity and save its principal ID:
+
+```powershell
+$webAppPrincipalId = az webapp identity assign `
+  --name $webAppName `
+  --resource-group $resourceGroup `
+  --query principalId `
+  --output tsv
+```
+
+Read the registry resource ID:
+
+```powershell
+$acrId = az acr show `
+  --name $acrName `
+  --resource-group $resourceGroup `
+  --query id `
+  --output tsv
+```
+
+Assign the `AcrPull` role to the web app identity at the registry scope:
+
+```powershell
+az role assignment create `
+  --assignee-object-id $webAppPrincipalId `
+  --assignee-principal-type ServicePrincipal `
+  --role "AcrPull" `
+  --scope $acrId
+```
+
+`AcrPull` allows the web app identity to download images but does not allow it to push or delete images.
+
+App Service uses Azure Resource Manager audience tokens when it authenticates to ACR. Check the registry setting and enable it if necessary:
+
+```powershell
+az acr config authentication-as-arm show `
+  --registry $acrName
+
+az acr config authentication-as-arm update `
+  --registry $acrName `
+  --status enabled
+```
+
+## 8. Configure App Service to pull and run the image
+
+Tell App Service to use its managed identity when it authenticates to ACR:
+
+```powershell
+$webAppConfigId = az webapp config show `
+  --name $webAppName `
+  --resource-group $resourceGroup `
+  --query id `
+  --output tsv
+
+az resource update `
+  --ids $webAppConfigId `
+  --set properties.acrUseManagedIdentityCreds=true
+```
+
+Read the registry login server and build the complete image name:
+
+```powershell
+$acrLoginServer = az acr show `
+  --name $acrName `
+  --resource-group $resourceGroup `
+  --query loginServer `
+  --output tsv
+
+$imageName = "$acrLoginServer/ai200-webapp:latest"
+```
+
+Configure the web app to pull this private image:
+
+```powershell
+az webapp config container set `
+  --name $webAppName `
+  --resource-group $resourceGroup `
+  --container-image-name $imageName `
+  --container-registry-url "https://$acrLoginServer"
+```
+
+The Dockerfile configures the application to listen on port `8080`. Tell App Service to route website traffic to that container port:
+
+```powershell
+az webapp config appsettings set `
+  --name $webAppName `
+  --resource-group $resourceGroup `
+  --settings WEBSITES_PORT=8080
+```
+
+Restart the web app so App Service starts a container and pulls the image:
+
+```powershell
+az webapp restart `
+  --name $webAppName `
+  --resource-group $resourceGroup
+```
+
+The first container start downloads all image layers. On later restarts, App Service checks the configured tag and downloads only layers that changed.
+
+## 9. Open the website and inspect the container logs
+
+Get the website URL:
+
+```powershell
+$hostName = az webapp show `
+  --name $webAppName `
+  --resource-group $resourceGroup `
+  --query defaultHostName `
+  --output tsv
+
+"https://$hostName"
+```
+
+Enable container logging and stream the startup output:
+
+```powershell
+az webapp log config `
+  --name $webAppName `
+  --resource-group $resourceGroup `
+  --docker-container-logging filesystem
+
+az webapp log tail `
+  --name $webAppName `
+  --resource-group $resourceGroup
+```
+
+The logs show whether App Service authenticated to ACR, pulled the image, created the container, and started the ASP.NET Core application. Press `Ctrl+C` to stop streaming logs.
+
+## 10. Pull a newly built `latest` image
+
+After changing the application, build and push a new image with the same tag:
+
+```powershell
+az acr build `
+  --registry $acrName `
+  --image ai200-webapp:latest `
+  .
+```
+
+Restart the web app to make it check ACR and pull the updated `latest` image:
+
+```powershell
+az webapp restart `
+  --name $webAppName `
+  --resource-group $resourceGroup
+```
+
+App Service does not continuously poll ACR for changes. Restarting creates a new container startup, which causes App Service to check the configured image tag and retrieve changed layers.
 
 ## Azure Container Registry Tasks
 
